@@ -139,6 +139,12 @@ RELEASE_RE = re.compile(
     re.IGNORECASE,
 )
 
+HISTORICAL_FILE_RE = re.compile(
+    r"\b(?:3-\d{2,6}|8-\d{2,6}|2-\d{2,6}|801-\d{1,6}|24(?:SF|S|W)-\d{1,6})\b",
+    re.IGNORECASE,
+)
+GENERIC_RELEASE_RE = re.compile(r"\bRelease\s+No\.?\s*([A-Z0-9-]+)", re.IGNORECASE)
+
 DATE_RE = re.compile(
     r"\b(?:Jan(?:uary)?\.?|Feb(?:ruary)?\.?|Mar(?:ch)?\.?|Apr(?:il)?\.?|May|"
     r"Jun(?:e)?\.?|Jul(?:y)?\.?|Aug(?:ust)?\.?|Sep(?:t(?:ember)?)?\.?|"
@@ -258,8 +264,12 @@ def parse_historical_page(
         anchor_text = " ".join(anchor.stripped_strings).strip()
         title = _clean_title(anchor_text, context)
         category = category_for_url(url, fallback_category)
-        release_number = _first_match(RELEASE_RE, f"{anchor_text} {context} {url}")
-        file_number = file_number_from_text(anchor_text, context, url)
+        combined_metadata = f"{anchor_text} {context} {url}"
+        release_number = _release_number_from_text(combined_metadata)
+        file_number = (
+            file_number_from_text(anchor_text, context, url)
+            or _first_match(HISTORICAL_FILE_RE, combined_metadata)
+        )
         document_date = _normalize_date(_first_match(DATE_RE, context))
         author = _infer_author(category, context_node)
         kind = _link_kind(url, page_url)
@@ -324,6 +334,14 @@ def _infer_author(category: str, context_node) -> str | None:
 def _first_match(pattern: re.Pattern[str], value: str) -> str | None:
     match = pattern.search(value)
     return match.group(0) if match else None
+
+
+def _release_number_from_text(value: str) -> str | None:
+    direct = RELEASE_RE.search(value)
+    if direct:
+        return direct.group(0)
+    generic = GENERIC_RELEASE_RE.search(value)
+    return generic.group(1) if generic else None
 
 
 def _normalize_date(value: str | None) -> str | None:
