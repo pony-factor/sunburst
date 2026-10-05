@@ -38,6 +38,21 @@ HISTORICAL_SEEDS: tuple[tuple[str, str, str], ...] = (
         "page",
     ),
     (
+        "alj-initial-decisions",
+        "https://www.sec.gov/enforcement-litigation/administrative-law-judges-decisions?order=field_publish_date&sort=asc",
+        "page",
+    ),
+    (
+        "commission-opinions-orders",
+        "https://www.sec.gov/enforcement-litigation/opinions-adjudicatory-orders?order=field_publish_date&sort=asc",
+        "page",
+    ),
+    (
+        "trading-suspensions",
+        "https://www.sec.gov/enforcement-litigation/trading-suspensions?order=field_publish_date&sort=asc",
+        "page",
+    ),
+    (
         "administrative-case-materials",
         "https://www.sec.gov/litigation/apdocuments",
         "page",
@@ -191,6 +206,12 @@ def category_for_url(url: str, fallback: str = "historical") -> str:
         return "accounting-auditing-enforcement"
     if "litreleases" in path or "litigation-releases" in path:
         return "litigation-releases"
+    if "administrative-law-judges-decisions" in path:
+        return "alj-initial-decisions"
+    if "opinions-adjudicatory-orders" in path:
+        return "commission-opinions-orders"
+    if "trading-suspensions" in path:
+        return "trading-suspensions"
     if "administrative-proceedings" in path or "/litigation/admin" in path or "apdocuments" in path:
         return "administrative-proceedings"
     if "/litigation/" in path:
