@@ -122,7 +122,17 @@ class ArchiveStore:
                     author, release_number, file_number, updated_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(url) DO UPDATE SET
-                    category=COALESCE(archive_queue.category, excluded.category),
+                    kind=CASE
+                        WHEN archive_queue.kind='page' AND excluded.kind='document'
+                        THEN 'document'
+                        ELSE archive_queue.kind
+                    END,
+                    category=CASE
+                        WHEN archive_queue.category IN ('historical', 'custom')
+                        THEN excluded.category
+                        ELSE archive_queue.category
+                    END,
+                    discovered_from=COALESCE(archive_queue.discovered_from, excluded.discovered_from),
                     title=COALESCE(archive_queue.title, excluded.title),
                     document_date=COALESCE(archive_queue.document_date, excluded.document_date),
                     author=COALESCE(archive_queue.author, excluded.author),
