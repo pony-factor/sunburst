@@ -6,6 +6,9 @@ Sunburst's historical archive mode is designed to preserve and index SEC-hosted 
 
 | Category | Built-in SEC root | Historical reach visible from the SEC index |
 | --- | --- | --- |
+| SEC News Digest | https://www.sec.gov/news/digest.shtml | Daily Commission-action digest archive from 1956 through 2013 |
+| SEC e-Docket | https://www.sec.gov/about/sec-docket.shtml | Online XML Docket issues from 2013 through the final issue in 2018; earlier paper Dockets are not comprehensively online |
+| What's New chronology | https://www.sec.gov/news/whatsnew/wn-todauto.html | Daily SEC website posting chronology with links to prior issues |
 | Reports and publications | https://www.sec.gov/reports?order=field_publish_date&sort=asc | Annual reports from 1935 and other Commission publications |
 | Speeches and statements | https://www.sec.gov/newsroom/speeches-statements/speeches-statements-archive?order=field_publish_date&sort=asc | Archive includes material from 1929 and the pre-Commission 1933 Securities Act period |
 | Press releases | https://www.sec.gov/newsroom/press-releases?order=field_publish_date&sort=asc | SEC press-release archive exposed by the current site |
@@ -43,7 +46,7 @@ Original files are stored under a SHA-256 prefix directory so identical content 
 
 The crawler follows only SEC-hosted archive families and directly linked SEC files. It rejects EDGAR issuer filing paths such as `/Archives/edgar`, the inline XBRL viewer, and EDGAR browse endpoints.
 
-This is an online-archive completeness target, not a claim that every document the SEC has ever created is publicly available on SEC.gov. The SEC's own legacy pages identify important gaps. For example, the litigation archive notes that the SEC website was established on September 28, 1995 and directs users elsewhere for earlier litigation releases. The Corporation Finance no-action index says it principally contains letters dated after January 15, 2002 and that older letters may need to be requested separately.
+This is an online-archive completeness target, not a claim that every document the SEC has ever created is publicly available on SEC.gov. The SEC's own legacy pages identify important gaps. For example, the litigation archive notes that the SEC website was established on September 28, 1995 and directs users elsewhere for earlier litigation releases. The Corporation Finance no-action index says it principally contains letters dated after January 15, 2002 and that older letters may need to be requested separately. The SEC Docket page likewise explains that archival e-Dockets cover the later online publication period, while earlier paper Dockets may require access through the SEC public reference room.
 
 When an offline or newly discovered SEC collection becomes available, add it as an explicit seed:
 
