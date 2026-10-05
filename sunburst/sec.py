@@ -362,6 +362,8 @@ def extract_document(content: bytes, content_type: str, url: str) -> tuple[str |
             return _extract_docx(content), None
         if suffix == ".doc" or content_type in {"application/msword", "application/vnd.ms-word"}:
             return None, "Legacy binary .doc extraction is not supported yet"
+        if suffix in {".xls", ".xlsx", ".ppt", ".pptx", ".zip"}:
+            return None, f"Binary {suffix} extraction is not supported yet"
         return _decode_text(content).strip() or None, None
     except Exception as exc:  # Keep metadata even when one document is malformed.
         return None, f"{type(exc).__name__}: {exc}"
