@@ -21,6 +21,9 @@ dev = ["pytest>=8,<9"]
 sunburst = "sunburst.cli:main"
 sunburst-mcp = "sunburst.server:main"
 
+[tool.hatch.build.targets.wheel]
+packages = ["sunburst"]
+
 [tool.pytest.ini_options]
 addopts = "-q"
 testpaths = ["tests"]
