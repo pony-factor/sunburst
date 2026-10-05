@@ -23,7 +23,10 @@ SEC_ORIGIN = "https://www.sec.gov"
 DEFAULT_SEEDS = (
     f"{SEC_ORIGIN}/rules-regulations/rulemaking-activity",
     f"{SEC_ORIGIN}/rules-regulations/self-regulatory-organization-rulemaking",
+    f"{SEC_ORIGIN}/rules-regulations/public-company-accounting-oversight-board-rulemaking",
+    f"{SEC_ORIGIN}/rules-regulations/petitions-rulemaking-submitted-to-sec",
     f"{SEC_ORIGIN}/rules-regulations/submit-public-comments",
+    f"{SEC_ORIGIN}/files/rules.shtml",
 )
 
 FILE_NUMBER_RE = re.compile(
@@ -119,8 +122,21 @@ def is_discovery_page(url: str) -> bool:
     allowed_prefixes = (
         "/rules-regulations/rulemaking-activity",
         "/rules-regulations/self-regulatory-organization-rulemaking",
+        "/rules-regulations/public-company-accounting-oversight-board-rulemaking",
+        "/rules-regulations/petitions-rulemaking-submitted-to-sec",
         "/rules-regulations/submit-public-comments",
         "/rules-regulations/20",
+        "/rules/proposed",
+        "/rules/concept",
+        "/rules/final",
+        "/rules/interim-final",
+        "/rules/interpretive",
+        "/rules/policy",
+        "/rules/pcaob",
+        "/rules/sro",
+        "/rules/petitions",
+        "/rules/other",
+        "/files/rules.shtml",
     )
     return any(path.startswith(prefix) for prefix in allowed_prefixes)
 
