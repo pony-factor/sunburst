@@ -356,6 +356,14 @@ def extract_document(content: bytes, content_type: str, url: str) -> tuple[str |
             main = soup.find("main") or soup.find(id="main-content") or soup.body or soup
             body = "\n".join(line.strip() for line in main.stripped_strings if line.strip())
             return body or None, None if body else "HTML contained no extractable text"
+        if content_type in {"application/xml", "text/xml"} or suffix == ".xml":
+            root = ElementTree.fromstring(content)
+            body = "\n".join(
+                text.strip()
+                for text in root.itertext()
+                if text and text.strip()
+            )
+            return body or None, None if body else "XML contained no extractable text"
         if content_type.startswith("text/") or suffix == ".txt":
             return _decode_text(content).strip() or None, None
         if suffix == ".docx" or content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
