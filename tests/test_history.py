@@ -46,6 +46,28 @@ def test_archive_store_searches_historical_documents(tmp_path: Path) -> None:
     ]
 
 
+def test_archive_queue_refines_rediscovered_document(tmp_path: Path) -> None:
+    db = Database(tmp_path / "sunburst.db")
+    archive = ArchiveStore(db)
+    url = "https://www.sec.gov/files/example.pdf"
+
+    archive.enqueue(url, "page", category="historical")
+    archive.enqueue(
+        url,
+        "document",
+        category="reports",
+        discovered_from="https://www.sec.gov/reports",
+        title="Example Report",
+    )
+
+    item = archive.next_item()
+    assert item is not None
+    assert item["kind"] == "document"
+    assert item["category"] == "reports"
+    assert item["discovered_from"] == "https://www.sec.gov/reports"
+    assert item["title"] == "Example Report"
+
+
 def test_parse_historical_page_recovers_metadata_and_pagination() -> None:
     html = b"""
     <html><body><main>
