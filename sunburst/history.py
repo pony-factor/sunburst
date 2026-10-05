@@ -16,6 +16,9 @@ from .db import Database
 from .sec import SECClient, canonicalize_url, extract_document, file_number_from_text, sha256
 
 HISTORICAL_SEEDS: tuple[tuple[str, str, str], ...] = (
+    ("news-digest", "https://www.sec.gov/news/digest.shtml", "page"),
+    ("sec-docket", "https://www.sec.gov/about/sec-docket.shtml", "page"),
+    ("whats-new", "https://www.sec.gov/news/whatsnew/wn-todauto.html", "page"),
     ("reports", "https://www.sec.gov/reports?order=field_publish_date&sort=asc", "page"),
     (
         "speeches-statements",
@@ -93,6 +96,8 @@ HISTORICAL_SEEDS: tuple[tuple[str, str, str], ...] = (
 
 HISTORY_PREFIXES = (
     "/reports",
+    "/about/sec-docket",
+    "/about/docket/",
     "/newsroom/speeches-statements",
     "/newsroom/press-releases",
     "/news/",
@@ -116,6 +121,7 @@ BLOCKED_PREFIXES = (
 
 BINARY_EXTENSIONS = {
     ".pdf",
+    ".xml",
     ".txt",
     ".doc",
     ".docx",
@@ -204,6 +210,12 @@ def is_historical_target(url: str, *, parent_url: str | None = None) -> bool:
 
 def category_for_url(url: str, fallback: str = "historical") -> str:
     path = urllib.parse.urlsplit(url).path.lower()
+    if "/news/digest" in path:
+        return "news-digest"
+    if path.startswith("/about/docket/") or path.startswith("/about/sec-docket"):
+        return "sec-docket"
+    if "/news/whatsnew/" in path:
+        return "whats-new"
     if "/speeches-statements" in path or path.startswith("/news/speech"):
         return "speeches-statements"
     if "/press-releases" in path or path.startswith("/news/press"):
