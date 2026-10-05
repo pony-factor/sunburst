@@ -76,6 +76,32 @@ def test_parse_historical_page_recovers_metadata_and_pagination() -> None:
     assert by_url[page_url].kind == "page"
 
 
+def test_parse_adjudicatory_file_and_release_numbers() -> None:
+    html = b"""
+    <html><body><table>
+      <tr>
+        <td>Feb. 11, 2026</td>
+        <td>
+          <a href="/enforcement-litigation/administrative-law-judges-decisions/example">
+            Epic Capital Wealth Advisors, LLC
+          </a>
+          Release No. 1418 File Number: 3-22307
+        </td>
+      </tr>
+    </table></body></html>
+    """
+
+    links = parse_historical_page(
+        html,
+        "https://www.sec.gov/enforcement-litigation/administrative-law-judges-decisions",
+        "alj-initial-decisions",
+    )
+    assert len(links) == 1
+    assert links[0].release_number == "1418"
+    assert links[0].file_number == "3-22307"
+    assert links[0].document_date == "2026-02-11"
+
+
 class FakeClient:
     def fetch(self, url: str) -> FetchResult:
         if url == "https://www.sec.gov/reports":
