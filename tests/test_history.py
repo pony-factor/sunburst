@@ -124,6 +124,16 @@ def test_parse_adjudicatory_file_and_release_numbers() -> None:
     assert links[0].document_date == "2026-02-11"
 
 
+def test_sec_docket_xml_is_extractable() -> None:
+    body, error = extract_document(
+        b"<docket><release><title>Exchange Act Release</title><text>Market structure history.</text></release></docket>",
+        "application/xml",
+        "https://www.sec.gov/about/docket/2013/sec-docket-106-13.xml",
+    )
+    assert error is None
+    assert body == "Exchange Act Release\nMarket structure history."
+
+
 def test_unsupported_binary_is_preserved_without_gibberish_text() -> None:
     body, error = extract_document(
         b"PK\\x03\\x04not-really-an-xlsx",
