@@ -18,6 +18,9 @@ It records file numbers, received dates, letter types, commenters, source URLs, 
 
 `ingest-history` crawls SEC-hosted archival families including:
 
+- SEC News Digest issues (1956–2013)
+- SEC e-Docket issues
+- archived What's New daily posting indexes
 - reports and publications, including annual reports
 - speeches, testimony, and public statements
 - press releases
