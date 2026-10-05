@@ -5,7 +5,7 @@ from pathlib import Path
 from sunburst.archive import ArchiveStore
 from sunburst.db import Database
 from sunburst.history import HistoricalIngestor, parse_historical_page
-from sunburst.sec import FetchResult
+from sunburst.sec import FetchResult, extract_document
 
 
 def test_archive_store_searches_historical_documents(tmp_path: Path) -> None:
@@ -122,6 +122,16 @@ def test_parse_adjudicatory_file_and_release_numbers() -> None:
     assert links[0].release_number == "1418"
     assert links[0].file_number == "3-22307"
     assert links[0].document_date == "2026-02-11"
+
+
+def test_unsupported_binary_is_preserved_without_gibberish_text() -> None:
+    body, error = extract_document(
+        b"PK\\x03\\x04not-really-an-xlsx",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "https://www.sec.gov/files/historical-workbook.xlsx",
+    )
+    assert body is None
+    assert error == "Binary .xlsx extraction is not supported yet"
 
 
 class FakeClient:
